@@ -1,3 +1,4 @@
+import 'package:avaliacao_componentizacao_stateful_controller/controllers/product_controller.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/models/product.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/add_to_bag_button.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/format_price.dart';
@@ -5,6 +6,7 @@ import 'package:avaliacao_componentizacao_stateful_controller/widgets/price_summ
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/product_card.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/quantity_selector.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/section_tittle.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/widgets/size_selector.dart';
 
 import 'package:flutter/material.dart';
 
@@ -34,16 +36,23 @@ class _ProductPageState extends State<ProductPage> {
     super.initState();
   }
 
+  ProductController productController = ProductController(
+    product: Product(
+      name: 'Camiseta +DevsEcomm',
+      price: 129.90,
+      icon: Icons.checkroom,
+      availableSizes: ['P', 'M', 'G'],
+    ),
+  );
+
   @override
   Widget build(BuildContext context) {
-    final double subtotal = ProductPage._product.price * ProductPage._quantity;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF9F1F6),
       appBar: AppBar(
         backgroundColor: const Color(0xFFF9F1F6),
         title: Text(
-          ProductPage._product.name,
+          productController.product.name,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -59,16 +68,27 @@ class _ProductPageState extends State<ProductPage> {
             children: [
               const SizedBox(height: 8),
               ProductCard(
-                product: ProductPage._product,
-                isFavorite: ProductPage._isFavorite,
+                product: productController.product,
+                isFavorite: productController.isFavorite,
+                onPressed: () {
+                  setState(() {
+                    productController.toggleFavorite();
+                  });
+                },
               ),
               const SizedBox(height: 24),
               SectionTittle(),
               const SizedBox(height: 12),
-              // size_selector_and_size_chip(
-              //   selectedSize: ProductPage._selectedSize,
-              //   product: ProductPage._product,
+              //  size_selector_and_size_chip(
+              //  selectedSize: ProductPage._selectedSize,
+              //  product: ProductPage._product,
               // ),
+              const SizedBox(height: 28),
+              size_selector(
+                product: productController.product,
+                selectedSize: productController.selectedSize,
+                onSelected: () => '',
+              ),
               const SizedBox(height: 28),
               const Text(
                 'Quantidade',
@@ -78,10 +98,30 @@ class _ProductPageState extends State<ProductPage> {
                   color: Colors.black,
                 ),
               ),
+              // const Text(
+              //   'Quantidade',
+              //   style: TextStyle(
+              //     fontSize: 14,
+              //     fontWeight: FontWeight.w600,
+              //     color: Colors.black,
+              //   ),
+              // ),
               const SizedBox(height: 12),
-              QuantitySelector(),
+              QuantitySelector(
+                quantity: productController.quantity,
+                increment: () {
+                  setState(() {
+                    productController.increment();
+                  });
+                },
+                descrement: () {
+                  setState(() {
+                    productController.decrement();
+                  });
+                },
+              ),
               const SizedBox(height: 28),
-              PriceSummary(subtotal: subtotal),
+              PriceSummary(subtotal: productController.subTotal),
             ],
           ),
         ),

@@ -7,32 +7,23 @@ class ProductController {
 
   String selectedSize = 'P';
   int quantity = 4;
-  bool isFavorite = false;
+  bool isFavorite = true;
   double get subTotal => product.price * quantity;
   void toggleFavorite() => isFavorite = !isFavorite;
 
   void selectSize(String size) {
-    // TODO
-  }
-  void increment(int quantity) {
-    if (quantity < 15) {
-      this.quantity++;
-    }
-
-    if (quantity < 0) {
-      print('Quantidade não pode ser menor que 0');
-    }
+    selectedSize = size;
   }
 
-  void selectedSizee(String size) {
-    if (product.availableSizes.contains(size)) {
-      selectedSize = size;
-    }
+  void increment() {
+    quantity++;
   }
 
-  void decrement(int quantity) {}
+  void selectedSizee(String size) {}
 
-  void isFavoritee(bool isFavorite) {
-    ;
+  void decrement() {
+    if (quantity > 0) {
+      quantity--;
+    }
   }
 }
