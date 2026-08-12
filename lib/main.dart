@@ -12,16 +12,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: ProductPage(
-        product: Product(
-          name: 'Camiseta +DevsEcomm',
-          price: 129.90,
-          icon: Icons.checkroom,
-          availableSizes: ['P', 'M', 'G'],
-        ),
-      ),
-    );
+    return MaterialApp(debugShowCheckedModeBanner: false, home: ProductPage());
   }
 }

@@ -9,9 +9,7 @@ import '../widgets/quantity_selector.dart';
 import '../widgets/price_summary.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key, required this.product});
-
-  final Product product;
+  const ProductPage({super.key});
 
   @override
   State<ProductPage> createState() => _ProductPageState();
@@ -23,20 +21,27 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
-    controller = ProductController(product: widget.product);
+    controller = ProductController(
+      product: Product(
+        name: 'Camiseta +DevsEcomm',
+        price: 129.90,
+        icon: Icons.checkroom,
+        availableSizes: ['P', 'M', 'G'],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.product.name)),
+      appBar: AppBar(title: Text(controller.product.name)),
       body: Padding(
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ProductCard(
-              product: widget.product,
+              product: controller.product,
               isFavorite: controller.isFavorite,
               onFavoriteTap: () {
                 setState(() {
@@ -48,7 +53,7 @@ class _ProductPageState extends State<ProductPage> {
             SectionTitle(title: 'Tamanho'),
             SizedBox(height: 8),
             SizeSelector(
-              sizes: widget.product.availableSizes,
+              sizes: controller.product.availableSizes,
               selectedSize: controller.selectedSize,
               onSizeSelected: (size) {
                 setState(() {
@@ -75,12 +80,13 @@ class _ProductPageState extends State<ProductPage> {
             PriceSummary(subTotal: controller.subTotal),
             Spacer(),
             AddToBagButton(
-              enabled: controller.quantity > 0,
-              onPressed: () {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Adicionado à sacola!')));
-              },
+              onPressed: controller.quantity > 0
+                  ? () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Adicionado à sacola!')),
+                      );
+                    }
+                  : null,
             ),
           ],
         ),

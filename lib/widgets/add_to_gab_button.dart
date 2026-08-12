@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AddToBagButton extends StatelessWidget {
-  const AddToBagButton({
-    super.key,
-    required this.enabled,
-    required this.onPressed,
-  });
+  const AddToBagButton({super.key, required this.onPressed});
 
-  final bool enabled;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +11,7 @@ class AddToBagButton extends StatelessWidget {
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: enabled ? onPressed : null,
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
         child: Text(
           'Adicionar à sacola',
