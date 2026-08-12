@@ -1,3 +1,6 @@
+import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/product_card.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/quantity_selector.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/section_title.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,9 +21,14 @@ class Product {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -78,67 +86,9 @@ class ProductPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFE9DCE6)),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 56,
-                      height: 56,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFEDEDED),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Icon(_product.icon, color: Colors.black54),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _product.name,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            _formatPrice(_product.price),
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: null,
-                      icon: Icon(
-                        _isFavorite ? Icons.favorite : Icons.favorite_border,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              ProductCard(product: _product, isFavorite: _isFavorite),
               const SizedBox(height: 24),
-              const Text(
-                'Tamanho',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
+              SectionTitle(label: 'Tamanho'),
               const SizedBox(height: 12),
               Row(
                 children: _product.availableSizes.map((size) {
@@ -193,60 +143,12 @@ class ProductPage extends StatelessWidget {
                 }).toList(),
               ),
               const SizedBox(height: 28),
-              const Text(
-                'Quantidade',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
+              SectionTitle(label: 'Quantidade'),
               const SizedBox(height: 12),
-              Row(
-                children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black54),
-                    ),
-                    child: const Icon(
-                      Icons.remove,
-                      size: 18,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 48,
-                    child: Text(
-                      '$_quantity',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black54),
-                    ),
-                    child: const Icon(
-                      Icons.add,
-                      size: 18,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
+              QuantitySelector(quantity: _quantity),
               const SizedBox(height: 28),
               Text(
-                'Subtotal: ${_formatPrice(subtotal)}',
+                'Subtotal: $subtotal',
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
