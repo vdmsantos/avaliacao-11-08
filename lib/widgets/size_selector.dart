@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class SizeSelector extends StatelessWidget {
   final Product _product;
   final String _selectedSize;
+  final Function(String) onTap;
 
   const SizeSelector({
     super.key,
     required this._product,
     required this._selectedSize,
+    required this.onTap,
   });
 
   @override
@@ -18,6 +20,7 @@ class SizeSelector extends StatelessWidget {
       children: _product.availableSizes.map((size) {
         final bool isSelected = size == _selectedSize;
         return SizeChip(
+          onTap: onTap,
           size: size,
           type: isSelected ? SizeChipType.selected : SizeChipType.notSelected,
         );

@@ -1,29 +1,15 @@
-import 'package:avaliacao_componentizacao_stateful_controller/controllers/product_page_controller.dart';
-import 'package:avaliacao_componentizacao_stateful_controller/models/product.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/shared/utils.dart';
 import 'package:flutter/material.dart';
 
-class PriceSummary extends StatefulWidget {
-  const PriceSummary({super.key, required this.product});
+class PriceSummary extends StatelessWidget {
+  const PriceSummary({super.key, required this.subtotal});
 
-  final Product product;
-
-  @override
-  State<PriceSummary> createState() => _PriceSummaryState();
-}
-
-class _PriceSummaryState extends State<PriceSummary> {
-  late ProductController controller;
-
-  @override
-  void initState() {
-    controller = ProductController(product: widget.product);
-    super.initState();
-  }
+  final double subtotal;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Subtotal: ${controller.subTotal}',
+      'Subtotal: ${Utils.formatPrice(subtotal)}',
       style: const TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w700,

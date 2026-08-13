@@ -1,4 +1,6 @@
+import 'package:avaliacao_componentizacao_stateful_controller/controllers/product_page_controller.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/models/product.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/widgets/add_to_bag_button.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/price_summary.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/product_card.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/widgets/quantity_selector.dart';
@@ -9,20 +11,28 @@ import 'package:flutter/material.dart';
 class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
 
-  static const Product _product = Product(
-    name: 'Camiseta +DevsEcomm',
-    price: 129.90,
-    icon: Icons.checkroom,
-    availableSizes: ['P', 'M', 'G'],
-  );
+  // static const Product _product = Product(
+  //   name: 'Camiseta +DevsEcomm',
+  //   price: 129.90,
+  //   icon: Icons.checkroom,
+  //   availableSizes: ['P', 'M', 'G'],
+  // );
 
-  static const String _selectedSize = 'M';
+  // static const String _selectedSize = 'M';
 
   @override
   State<ProductPage> createState() => _ProductPageState();
 }
 
 class _ProductPageState extends State<ProductPage> {
+  ProductController controller = ProductController(
+    product: Product(
+      name: 'Camiseta +DevsEcomm',
+      price: 129.90,
+      icon: Icons.checkroom,
+      availableSizes: ['P', 'M', 'G'],
+    ),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +40,7 @@ class _ProductPageState extends State<ProductPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFF9F1F6),
         title: Text(
-          ProductPage._product.name,
+          controller.product.name,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -45,20 +55,45 @@ class _ProductPageState extends State<ProductPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              ProductCard(product: ProductPage._product),
+              ProductCard(
+                product: controller.product,
+                isFavorite: controller.isFavorite,
+                onPressed: () {
+                  setState(() {
+                    controller.toggleFavorite();
+                  });
+                },
+              ),
               const SizedBox(height: 24),
               SectionTitle(title: 'Tamanho'),
               const SizedBox(height: 12),
               SizeSelector(
-                product: ProductPage._product,
-                selectedSize: ProductPage._selectedSize,
+                onTap: (value) {
+                  setState(() {
+                    controller.selectSize(value);
+                  });
+                },
+                product: controller.product,
+                selectedSize: controller.selectedSize,
               ),
               const SizedBox(height: 28),
               SectionTitle(title: 'Quantidade'),
               const SizedBox(height: 12),
-              QuantitySelector(product: ProductPage._product),
+              QuantitySelector(
+                quantity: controller.quantity,
+                decrement: () {
+                  setState(() {
+                    controller.decrement();
+                  });
+                },
+                increment: () {
+                  setState(() {
+                    controller.increment();
+                  });
+                },
+              ),
               const SizedBox(height: 28),
-              PriceSummary(product: ProductPage._product),
+              PriceSummary(subtotal: controller.subTotal),
             ],
           ),
         ),
@@ -69,21 +104,8 @@ class _ProductPageState extends State<ProductPage> {
           child: SizedBox(
             width: double.infinity,
             height: 52,
-            child: ElevatedButton(
-              onPressed: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: Colors.black,
-                disabledForegroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: const Text(
-                'Adicionar à sacola',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
+            child: AddToBagButton(
+              onPressed: controller.isButtonEnabled ? () {} : null,
             ),
           ),
         ),

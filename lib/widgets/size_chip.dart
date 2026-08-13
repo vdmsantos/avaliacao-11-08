@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 enum SizeChipType { selected, notSelected }
 
 class SizeChip extends StatelessWidget {
-  const SizeChip({super.key, required this.type, required this.size});
+  const SizeChip({
+    super.key,
+    required this.type,
+    required this.size,
+    required this.onTap,
+  });
 
   final SizeChipType type;
   final String size;
+  final Function(String) onTap;
 
   Color getBackgroundColor() {
     switch (type) {
@@ -31,12 +37,17 @@ class SizeChip extends StatelessWidget {
   Widget getContent() {
     switch (type) {
       case SizeChipType.notSelected:
-        return Text(
-          size,
-          style: const TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
+        return GestureDetector(
+          onTap: () {
+            onTap(size);
+          },
+          child: Text(
+            size,
+            style: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
           ),
         );
 

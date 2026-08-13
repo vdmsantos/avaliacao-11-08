@@ -12,8 +12,4 @@ class Product {
     required this.icon,
     required this.availableSizes,
   });
-
-  String formatPrice() {
-    return 'R\$ ${price.toStringAsFixed(1).replaceAll('.', ',')}';
-  }
 }

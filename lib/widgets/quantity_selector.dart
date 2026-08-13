@@ -2,22 +2,17 @@ import 'package:avaliacao_componentizacao_stateful_controller/controllers/produc
 import 'package:avaliacao_componentizacao_stateful_controller/models/product.dart';
 import 'package:flutter/material.dart';
 
-class QuantitySelector extends StatefulWidget {
-  const QuantitySelector({super.key, required this.product});
+class QuantitySelector extends StatelessWidget {
+  const QuantitySelector({
+    super.key,
+    required this.quantity,
+    required this.increment,
+    required this.decrement,
+  });
 
-  final Product product;
-  @override
-  State<QuantitySelector> createState() => _QuantitySelectorState();
-}
-
-class _QuantitySelectorState extends State<QuantitySelector> {
-  late ProductController controller;
-
-  @override
-  void initState() {
-    controller = ProductController(product: widget.product);
-    super.initState();
-  }
+  final int quantity;
+  final VoidCallback increment;
+  final VoidCallback decrement;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +26,14 @@ class _QuantitySelectorState extends State<QuantitySelector> {
             border: Border.all(color: Colors.black54),
           ),
           child: IconButton(
-            onPressed: () {
-              setState(() {
-                controller.decrement();
-              });
-            },
+            onPressed: decrement,
             icon: Icon(Icons.remove, size: 18, color: Colors.black87),
           ),
         ),
         SizedBox(
           width: 48,
           child: Text(
-            controller.quantity.toString(),
+            quantity.toString(),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18,
@@ -59,11 +50,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
             border: Border.all(color: Colors.black54),
           ),
           child: IconButton(
-            onPressed: () {
-              setState(() {
-                controller.increment();
-              });
-            },
+            onPressed: increment,
             icon: Icon(Icons.add, size: 18, color: Colors.black87),
           ),
         ),
