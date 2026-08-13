@@ -1,7 +1,11 @@
 import 'package:avaliacao_componentizacao_stateful_controller/models/controllers/product_controller.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/models/product.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/models/widgets/add_to_bag_button.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/models/widgets/price_summary.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/models/widgets/product_card.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/models/widgets/quantity_selector.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/models/widgets/section_title.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/models/widgets/size_selector.dart';
 import 'package:flutter/material.dart';
 
 class ProductPage extends StatefulWidget {
@@ -21,7 +25,7 @@ class _ProductPageState extends State<ProductPage> {
     ),
   );
   // static const Product _product = Product(
-  String _formatPrice(double value) {
+  String formatPrice(double value) {
     return 'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}';
   }
 
@@ -57,101 +61,38 @@ class _ProductPageState extends State<ProductPage> {
                 isFavorite: productController.isFavorite,
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Tamanho',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
+              SectionTitle(subtitle: 'Tamanho'),
               const SizedBox(height: 12),
-              Row(
-                children: productController.product.availableSizes.map((size) {
-                  final bool isSelected =
-                      size == productController.selectedSize;
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Container(
-                      width: 56,
-                      height: 44,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? const Color(0xFFDCC9F2)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: isSelected
-                              ? const Color(0xFFB491E0)
-                              : const Color(0xFFE0D6DD),
-                        ),
-                      ),
-                      child: isSelected
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.check,
-                                  size: 14,
-                                  color: Colors.black87,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  size,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Text(
-                              size,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                    ),
-                  );
-                }).toList(),
+              SizeSelector(
+                onSelected: (value) {
+                  setState(() {
+                    productController.selectSize(value);
+                  });
+                },
+                avaliableSizes: productController.product.availableSizes,
+                selectedSize: productController.selectedSize,
               ),
               const SizedBox(height: 28),
-              const Text(
-                'Quantidade',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
+              SectionTitle(subtitle: 'Quantidade'),
               const SizedBox(height: 12),
 
               QuantitySelector(
                 quantity: productController.quantity,
-                onDecrement: () => {
+                onDecrement: () {
                   setState(() {
                     productController.decrement();
-                  }),
+                    productController.changeActiveButton();
+                  });
                 },
-                onIncrement: () => {
+                onIncrement: () {
                   setState(() {
                     productController.increment();
-                  }),
+                    productController.changeActiveButton();
+                  });
                 },
               ),
               const SizedBox(height: 28),
-              Text(
-                'Subtotal: ${_formatPrice(productController.subTotal)}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
-              ),
+              PriceSummary(subtotal: productController.subTotal),
             ],
           ),
         ),
@@ -159,25 +100,13 @@ class _ProductPageState extends State<ProductPage> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-          child: SizedBox(
-            width: double.infinity,
-            height: 52,
-            child: ElevatedButton(
-              onPressed: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: Colors.black,
-                disabledForegroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: const Text(
-                'Adicionar à sacola',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ),
+          child: AddToBagButton(
+            state: productController.quantity > 0
+                ? ButtonState.enable
+                : ButtonState.disable,
+            onPressed: () {
+              print('cliquei em adicionar à sacola');
+            },
           ),
         ),
       ),

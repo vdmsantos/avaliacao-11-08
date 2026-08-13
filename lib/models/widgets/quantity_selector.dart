@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class QuantitySelector extends StatefulWidget {
+class QuantitySelector extends StatelessWidget {
   const QuantitySelector({
     super.key,
     required this.quantity,
@@ -12,17 +12,12 @@ class QuantitySelector extends StatefulWidget {
   final void Function()? onDecrement;
 
   @override
-  State<QuantitySelector> createState() => _QuantitySelectorState();
-}
-
-class _QuantitySelectorState extends State<QuantitySelector> {
-  @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         GestureDetector(
           onTap: () {
-            widget.onDecrement;
+            onDecrement?.call();
           },
           child: Container(
             width: 32,
@@ -37,7 +32,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
         SizedBox(
           width: 48,
           child: Text(
-            widget.quantity.toString(),
+            quantity.toString(),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18,
@@ -48,7 +43,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
         ),
         GestureDetector(
           onTap: () {
-            widget.onIncrement;
+            onIncrement?.call();
           },
           child: Container(
             width: 32,
