@@ -1,37 +1,21 @@
-import 'package:avaliacao_componentizacao_stateful_controller/main.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/modulo/product.dart';
 import 'package:flutter/material.dart';
 
 String _formatPrice(double value) {
   return 'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}';
 }
 
-class ProductCard extends StatefulWidget {
+class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
-    required this._product,
+    required this.product,
     this.isFavorite = false,
+    required this.onPressed,
   });
 
-  final Product _product;
+  final Product product;
   final bool isFavorite;
-
-  @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  late bool isObscure;
-  @override
-  initState() {
-    isObscure = widget.isFavorite;
-    super.initState();
-  }
-
-  void toggleObscure() {
-    setState(() {
-      isObscure = !isObscure;
-    });
-  }
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +35,7 @@ class _ProductCardState extends State<ProductCard> {
               color: const Color(0xFFEDEDED),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(widget._product.icon, color: Colors.black54),
+            child: Icon(product.icon, color: Colors.black54),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -59,7 +43,7 @@ class _ProductCardState extends State<ProductCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget._product.name,
+                  product.name,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
@@ -68,17 +52,15 @@ class _ProductCardState extends State<ProductCard> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  _formatPrice(widget._product.price),
+                  _formatPrice(product.price),
                   style: const TextStyle(fontSize: 14, color: Colors.black54),
                 ),
               ],
             ),
           ),
           IconButton(
-            onPressed: () {
-              toggleObscure();
-            },
-            icon: isObscure
+            onPressed: onPressed,
+            icon: isFavorite
                 ? Icon(Icons.favorite, color: Colors.red)
                 : Icon(Icons.favorite_border, color: Colors.red),
           ),

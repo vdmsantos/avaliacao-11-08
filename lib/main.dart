@@ -1,24 +1,14 @@
+import 'package:avaliacao_componentizacao_stateful_controller/controllers/product_controller.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/modulo/product.dart';
+import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/price_summary.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/product_card.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/quantity_selector.dart';
+// import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/quantity_selector.dart';
 import 'package:avaliacao_componentizacao_stateful_controller/pages/shared/widgets/section_title.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-class Product {
-  final String name;
-  final double price;
-  final IconData icon;
-  final List<String> availableSizes;
-
-  const Product({
-    required this.name,
-    required this.price,
-    required this.icon,
-    required this.availableSizes,
-  });
 }
 
 class MyApp extends StatefulWidget {
@@ -44,34 +34,37 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-String _formatPrice(double value) {
+String formatPrice(double value) {
   return 'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}';
 }
 
-class ProductPage extends StatelessWidget {
+class ProductPage extends StatefulWidget {
   const ProductPage({super.key});
 
-  static const Product _product = Product(
-    name: 'Camiseta +DevsEcomm',
-    price: 129.90,
-    icon: Icons.checkroom,
-    availableSizes: ['P', 'M', 'G'],
-  );
-
   static const String _selectedSize = 'M';
-  static const int _quantity = 0;
-  static const bool _isFavorite = true;
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  ProductController productController = ProductController(
+    product: Product(
+      name: 'Camiseta +DevsEcomm',
+      price: 129.90,
+      icon: Icons.checkroom,
+      availableSizes: ['P', 'M', 'G'],
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
-    final double subtotal = _product.price * _quantity;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF9F1F6),
       appBar: AppBar(
         backgroundColor: const Color(0xFFF9F1F6),
         title: Text(
-          _product.name,
+          productController.product.name,
           style: const TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -86,13 +79,21 @@ class ProductPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 8),
-              ProductCard(product: _product, isFavorite: _isFavorite),
+              ProductCard(
+                product: productController.product,
+                isFavorite: productController.isFavorite,
+                onPressed: () {
+                  setState(() {
+                    productController.toggleFavorite();
+                  });
+                },
+              ),
               const SizedBox(height: 24),
               SectionTitle(label: 'Tamanho'),
               const SizedBox(height: 12),
               Row(
-                children: _product.availableSizes.map((size) {
-                  final bool isSelected = size == _selectedSize;
+                children: productController.product.availableSizes.map((size) {
+                  final bool isSelected = size == ProductPage._selectedSize;
                   return Padding(
                     padding: const EdgeInsets.only(right: 12),
                     child: Container(
@@ -145,16 +146,21 @@ class ProductPage extends StatelessWidget {
               const SizedBox(height: 28),
               SectionTitle(label: 'Quantidade'),
               const SizedBox(height: 12),
-              QuantitySelector(quantity: _quantity),
-              const SizedBox(height: 28),
-              Text(
-                'Subtotal: $subtotal',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                ),
+              QuantitySelector(
+                decrement: () {
+                  setState(() {
+                    productController.decrementCounter();
+                  });
+                },
+                increment: () {
+                  setState(() {
+                    productController.incrementCounter();
+                  });
+                },
+                quantity: productController.quantity,
               ),
+              const SizedBox(height: 28),
+              PriceSummary(subtotal: productController.subTotal),
             ],
           ),
         ),

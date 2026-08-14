@@ -1,23 +1,26 @@
 // import 'package:avaliacao_componentizacao_stateful_controller/main.dart';
 import 'package:flutter/material.dart';
 
-class QuantitySelector extends StatefulWidget {
-  const QuantitySelector({super.key, required this._quantity});
+class QuantitySelector extends StatelessWidget {
+  const QuantitySelector({
+    super.key,
+    required this.decrement,
+    required this.increment,
+    required this._quantity,
+  });
+
+  final VoidCallback decrement;
+  final VoidCallback increment;
 
   final int _quantity;
 
-  @override
-  State<QuantitySelector> createState() => _QuantitySelectorState();
-}
-
-class _QuantitySelectorState extends State<QuantitySelector> {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         ElevatedButton(
           onPressed: () {
-            _decrementCounter();
+            decrement();
           },
           child: Container(
             width: 32,
@@ -32,7 +35,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
         SizedBox(
           width: 48,
           child: Text(
-            '$_counter',
+            '$_quantity',
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 18,
@@ -42,7 +45,7 @@ class _QuantitySelectorState extends State<QuantitySelector> {
           ),
         ),
         ElevatedButton(
-          onPressed: _incrementCounter,
+          onPressed: increment,
           child: Container(
             width: 32,
             height: 32,
@@ -55,27 +58,5 @@ class _QuantitySelectorState extends State<QuantitySelector> {
         ),
       ],
     );
-  }
-
-  int _counter = 0;
-  final _price = 129.90;
-
-  void subTotal() {
-    setState(() {});
-    _counter * _price;
-  }
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  void _decrementCounter() {
-    if (_counter > 0) {
-      setState(() {
-        _counter--;
-      });
-    }
   }
 }
